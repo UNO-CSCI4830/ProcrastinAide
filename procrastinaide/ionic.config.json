@@ -1,0 +1,7 @@
+{
+  "name": "procrastinaide",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
