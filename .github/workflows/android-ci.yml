@@ -1,4 +1,5 @@
-name: Android CI (Build & Distribute)
+# .github/workflows/android-ci.yml
+name: Android CI
 
 on:
   push:
@@ -13,18 +14,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install deps & build web (Ionic/Angular)
+      - name: Install Node deps & build web
         run: |
           npm ci
           npm run build
           npx cap sync android
 
-      - name: Set up Java (Android)
+      - name: Setup JDK & Android SDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -40,9 +40,10 @@ jobs:
 
       - name: Decode keystore
         working-directory: android
-        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
 
-      - name: Set signing properties
+      - name: Set signing props
         working-directory: android
         run: |
           cat <<EOF >> gradle.properties
@@ -52,31 +53,20 @@ jobs:
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_KEY_ALIAS_PASSWORD }}
           EOF
 
-      # Ensure android/app/build.gradle uses the props above in signingConfigs.release
+      # Ensure your app module uses these props in signingConfigs (release) in android/app/build.gradle
 
-      - name: Build AAB (release)
+      - name: Build AAB
         working-directory: android
-        run: ./gradlew --no-daemon bundleRelease
+        run: ./gradlew bundleRelease
 
       - name: Locate artifact
         id: paths
         run: |
           echo "AAB=$(find android/app/build/outputs/bundle/release -name '*.aab' | head -n1)" >> $GITHUB_OUTPUT
           echo "APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -n1 || true)" >> $GITHUB_OUTPUT
-          echo "Found AAB: $(cat $GITHUB_OUTPUT | sed -n 's/^AAB=//p')"
 
-      - name: Upload artifact (optional)
-        if: ${{ steps.paths.outputs.AAB != '' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-aab
-          path: ${{ steps.paths.outputs.AAB }}
-
-      - name: Distribute to Firebase App Distribution
+      - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          file: ${{ steps.paths.outputs.AAB }}
-          groups: ${{ secrets.APP_DIST_GROUPS }}
-          releaseNotes: "CI build from ${{ github.ref_name }} – ${{ github.sha }}"
