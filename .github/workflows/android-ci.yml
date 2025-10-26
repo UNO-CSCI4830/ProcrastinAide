@@ -12,22 +12,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Sanity check repo root
+        run: |
+          pwd
+          ls -la
+          ls -la src || true
+          ls -la src/environments || true
+
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Debug Check
-        run: |
-          ls -la src/environments || true
-          test -f src/environments/environment.prod.ts && echo "prod env present" || (echo "MISSING prod env"; exit 1)
-
-      - name: Install Node deps & build web
+      - name: Install deps & build web
         run: |
           npm ci
           npm run build
           npx cap sync android
 
-      - name: Setup JDK & Android SDK
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -56,8 +58,6 @@ jobs:
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_KEY_ALIAS_PASSWORD }}
           EOF
 
-      # Ensure your app module uses these props in signingConfigs (release) in android/app/build.gradle
-
       - name: Build AAB
         working-directory: android
         run: ./gradlew bundleRelease
@@ -66,7 +66,6 @@ jobs:
         id: paths
         run: |
           echo "AAB=$(find android/app/build/outputs/bundle/release -name '*.aab' | head -n1)" >> $GITHUB_OUTPUT
-          echo "APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -n1 || true)" >> $GITHUB_OUTPUT
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
