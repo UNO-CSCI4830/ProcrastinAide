@@ -1,4 +1,4 @@
-name: Hosting Preview
+name: Hosting (Preview & Prod)
 
 on:
   pull_request:
@@ -10,8 +10,10 @@ on:
       - bugfix/**
 
 jobs:
-  preview:
+  build:
     runs-on: ubuntu-latest
+    outputs:
+      channel_id: ${{ steps.slug.outputs.CHANNEL_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -23,19 +25,62 @@ jobs:
         run: |
           npm ci
           npm run build
-          # hosting uses firebase.json -> "public": "www"
-          # (Capacitor native sync not required for hosting)
-      
-      - name: Deploy to Firebase Hosting (preview channel)
+          # ensure firebase.json -> "public": "www"
+
+      # create a safe channel id for non-main pushes 
+      - name: Make branch slug
+        id: slug
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "CHANNEL_ID=live" >> $GITHUB_OUTPUT
+          else
+            SLUG="$(echo '${{ github.ref_name }}' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')"
+            # Firebase channel IDs can be long; trim to 20 chars just to be safe
+            echo "CHANNEL_ID=${SLUG:0:20}" >> $GITHUB_OUTPUT
+          fi
+
+  deploy-pr:
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy PR preview (auto channel)
         id: hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}               
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}      
-          expires: 7d                                          
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          expires: 7d
 
       - name: Echo preview URLs
         run: |
+          echo "Preview URL(s): ${{ steps.hosting.outputs.urls }}"
+          echo "Details URL:    ${{ steps.hosting.outputs.details_url }}"
+
+  deploy-push:
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # main => production; everything else => preview channel with our slug
+      - name: Deploy (prod on main, preview on branches)
+        id: hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: ${{ needs.build.outputs.channel_id }}
+          # For main, channelId=live => deploys to live site
+          # For other branches, uses our sanitized preview channel
+          expires: 7d
+
+      - name: Echo URLs
+        run: |
+          echo "Channel: ${{ needs.build.outputs.channel_id }}"
           echo "Preview URL(s): ${{ steps.hosting.outputs.urls }}"
           echo "Details URL:    ${{ steps.hosting.outputs.details_url }}"
