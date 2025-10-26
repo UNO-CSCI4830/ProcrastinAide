@@ -14,17 +14,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install Node deps & build web
         run: |
+          set -euo pipefail
           npm ci
           npm run build
+          # make sure Capacitor sees the built web assets
           npx cap sync android
 
-      - name: Setup JDK & Android SDK
+      - name: Set up JDK & Android SDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -38,10 +41,32 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
-      - name: Decode keystore
+      - name: Decode keystore (robust)
         working-directory: android
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, os, sys
+          data = os.environ.get('KEYSTORE_B64', '')
+          if not data:
+            print("ANDROID_KEYSTORE_BASE64 secret is empty", file=sys.stderr)
+            sys.exit(1)
+          # strip all whitespace/newlines just in case
+          data = ''.join(data.split())
+          try:
+            raw = base64.b64decode(data, validate=True)
+          except Exception as e:
+            print("Failed to base64-decode ANDROID_KEYSTORE_BASE64:", e, file=sys.stderr)
+            sys.exit(1)
+          with open('release.keystore', 'wb') as f:
+            f.write(raw)
+          print("release.keystore written")
+          PY
+          # Optional sanity check; won't fail the job if 'file' isn't helpful
+          file release.keystore || true
+          ls -lh release.keystore
 
       - name: Set signing props
         working-directory: android
@@ -52,21 +77,26 @@ jobs:
           MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_KEY_ALIAS_PASSWORD }}
           EOF
+          echo "Gradle signing properties appended."
 
-      # Ensure your app module uses these props in signingConfigs (release) in android/app/build.gradle
 
       - name: Build AAB
         working-directory: android
-        run: ./gradlew bundleRelease
+        run: ./gradlew --no-daemon bundleRelease
 
       - name: Locate artifact
         id: paths
         run: |
-          echo "AAB=$(find android/app/build/outputs/bundle/release -name '*.aab' | head -n1)" >> $GITHUB_OUTPUT
-          echo "APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -n1 || true)" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          AAB_PATH=$(find android/app/build/outputs/bundle/release -name '*.aab' | head -n1)
+          echo "AAB=$AAB_PATH" >> "$GITHUB_OUTPUT"
+          echo "Found AAB at: $AAB_PATH"
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          file: ${{ steps.paths.outputs.AAB }}
+          groups: ${{ secrets.APP_DIST_GROUPS }}
+          releaseNotes: "CI build from ${{ github.ref_name }} – ${{ github.sha }}"
