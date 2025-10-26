@@ -1,0 +1,73 @@
+name: Android CI (Build & Distribute)
+
+on:
+  push:
+    branches: [ main, develop, release/** ]
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node deps & build web
+        run: |
+          npm ci
+          npm run build
+          npx cap sync android
+
+      - name: Setup JDK & Android SDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Restore Android caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Decode keystore
+        working-directory: android
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+
+      - name: Set signing props
+        working-directory: android
+        run: |
+          cat <<EOF >> gradle.properties
+          MYAPP_UPLOAD_STORE_FILE=release.keystore
+          MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}
+          MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_KEY_ALIAS_PASSWORD }}
+          EOF
+
+      # Ensure your app module uses these props in signingConfigs (release) in android/app/build.gradle
+
+      - name: Build AAB
+        working-directory: android
+        run: ./gradlew bundleRelease
+
+      - name: Export paths
+        id: paths
+        run: |
+          echo "AAB=$(find android/app/build/outputs/bundle/release -name '*.aab' | head -n1)" >> $GITHUB_OUTPUT
+          echo "APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -n1 || true)" >> $GITHUB_OUTPUT
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          file: ${{ steps.paths.outputs.AAB }}
+          groups: ${{ secrets.APP_DIST_GROUPS }}
+          releaseNotes: "CI build from ${{ github.ref_name }} – ${{ github.sha }}"

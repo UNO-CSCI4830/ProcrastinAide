@@ -1,9 +1,10 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'procrastinaide',
-  webDir: 'www'
+  appId: 'com.procrastinaide.app',     
+  appName: 'ProcrastinAide',
+  webDir: 'build',
+  server: { androidScheme: 'https' }    
 };
 
 export default config;
