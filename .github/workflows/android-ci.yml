@@ -16,6 +16,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Debug Check
+        run: |
+          ls -la src/environments || true
+          test -f src/environments/environment.prod.ts && echo "prod env present" || (echo "MISSING prod env"; exit 1)
+
       - name: Install Node deps & build web
         run: |
           npm ci
