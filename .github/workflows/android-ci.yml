@@ -10,25 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Node deps & build web
+      - name: Install deps & build web (Ionic/Angular)
         run: |
           npm ci
           npm run build
           npx cap sync android
 
-      - name: Setup JDK & Android SDK
+      - name: Set up Java (Android)
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Restore Android caches
+      - name: Cache Gradle
         uses: actions/cache@v4
         with:
           path: |
@@ -38,10 +40,9 @@ jobs:
 
       - name: Decode keystore
         working-directory: android
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
 
-      - name: Set signing props
+      - name: Set signing properties
         working-directory: android
         run: |
           cat <<EOF >> gradle.properties
@@ -51,19 +52,27 @@ jobs:
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_KEY_ALIAS_PASSWORD }}
           EOF
 
-      # Ensure your app module uses these props in signingConfigs (release) in android/app/build.gradle
+      # Ensure android/app/build.gradle uses the props above in signingConfigs.release
 
-      - name: Build AAB
+      - name: Build AAB (release)
         working-directory: android
-        run: ./gradlew bundleRelease
+        run: ./gradlew --no-daemon bundleRelease
 
-      - name: Export paths
+      - name: Locate artifact
         id: paths
         run: |
           echo "AAB=$(find android/app/build/outputs/bundle/release -name '*.aab' | head -n1)" >> $GITHUB_OUTPUT
           echo "APK=$(find android/app/build/outputs/apk/release -name '*.apk' | head -n1 || true)" >> $GITHUB_OUTPUT
+          echo "Found AAB: $(cat $GITHUB_OUTPUT | sed -n 's/^AAB=//p')"
 
-      - name: Upload to Firebase App Distribution
+      - name: Upload artifact (optional)
+        if: ${{ steps.paths.outputs.AAB != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab
+          path: ${{ steps.paths.outputs.AAB }}
+
+      - name: Distribute to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
