@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.procrastinaide.app',     
   appName: 'ProcrastinAide',
-  webDir: 'build',
+  webDir: 'www',
   server: { androidScheme: 'https' }    
 };
 
