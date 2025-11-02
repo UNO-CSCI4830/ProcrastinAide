@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
+/**
+ * This only stores the task locally
+ */
 export interface TaskModel {
   name: string;
   due?: string | null;
