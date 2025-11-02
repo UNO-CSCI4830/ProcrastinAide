@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Your Tasks
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Task List</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <div class="section-title">
+    <h2>To Do</h2>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let t of todo$ | async">
+      <ion-checkbox slot="start" [checked]="t.completed" (ionChange)="toggleCompleted(t, $event.detail.checked)"></ion-checkbox>
+      <ion-label>
+        <h3>{{ t.name }}</h3>
+        <p *ngIf="t.category">{{ t.category }}</p>
+      </ion-label>
+      <ion-note slot="end">
+        <div>{{ t.duration ? t.duration + 'm' : '' }}</div>
+        <div *ngIf="t.due">{{ t.due | date: 'short' }}</div>
+      </ion-note>
+    </ion-item>
+    <ion-item *ngIf="(todo$ | async)?.length === 0">
+      <ion-label>No tasks yet — create one in New Task</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="section-title">
+    <h2>Completed</h2>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let t of completed$ | async">
+      <ion-checkbox slot="start" [checked]="t.completed" (ionChange)="toggleCompleted(t, $event.detail.checked)"></ion-checkbox>
+      <ion-label>
+        <h3 class="completed">{{ t.name }}</h3>
+        <p *ngIf="t.category">{{ t.category }}</p>
+      </ion-label>
+      <ion-note slot="end">
+        <div>{{ t.duration ? t.duration + 'm' : '' }}</div>
+        <div>{{ t.createdAt | date: 'short' }}</div>
+      </ion-note>
+    </ion-item>
+    <ion-item *ngIf="(completed$ | async)?.length === 0">
+      <ion-label>No completed tasks</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="actions">
+    <ion-button routerLink="/tabs/tab4" expand="block" color="primary">
+      New Task
+    </ion-button>
+  </div>
+</ion-content>
