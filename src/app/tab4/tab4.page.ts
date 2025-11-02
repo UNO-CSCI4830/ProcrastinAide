@@ -15,6 +15,7 @@ import {
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, JsonPipe } from '@angular/common';
+import { TaskService } from '../services/task.service';
 
 @Component({
   selector: 'app-tab4',
@@ -60,7 +61,7 @@ export class Tab4Page {
     { value: 'other', label: 'Other' },
   ];
 
-  constructor() {}
+  constructor(private taskService: TaskService) {}
 
   // called when user taps "Add Task" — currently local-only (console + reset)
   addTask() {
@@ -78,10 +79,8 @@ export class Tab4Page {
       category: this.task.category || null,
     };
 
-    // For now just log it — backend wiring will happen later
-    // You can replace this with an HTTP call or service when ready
-    // eslint-disable-next-line no-console
-    console.log('Add Task (payload):', payload);
+    // Add to in-memory task service (UI-only for now)
+    this.taskService.addTask(payload);
 
     // reset form
     this.task = { name: '', due: null, duration: null, category: null };
