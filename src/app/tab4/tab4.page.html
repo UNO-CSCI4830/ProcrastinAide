@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      New Task
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Tab 4</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list>
+    <ion-item>
+      <ion-label position="stacked">Task name</ion-label>
+      <ion-input
+        placeholder="Enter Task Name"
+        [(ngModel)]="task.name"
+        required
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Due date</ion-label>
+      <ion-datetime
+        display-format="MMM DD, YYYY HH:mm"
+        picker-format="MMM DD YYYY HH:mm"
+        [(ngModel)]="task.due"
+      ></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Duration est. (minutes)</ion-label>
+      <ion-input
+        type="number"
+        placeholder="e.g. 30"
+        [(ngModel)]="task.duration"
+        inputmode="numeric"
+        min="0"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Category</ion-label>
+      <ion-select placeholder="Select category" [(ngModel)]="task.category">
+        <ion-select-option *ngFor="let c of categories" [value]="c.value">{{ c.label }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <div class="actions">
+    <ion-button expand="block" color="primary" (click)="addTask()" [disabled]="!task.name || task.name.trim() === ''">
+      Add Task
+    </ion-button>
+  </div>
+
+  <!-- small helper for dev: show current model (remove later) -->
+  <div class="debug">
+    <pre>{{ task | json }}</pre>
+  </div>
+</ion-content>
