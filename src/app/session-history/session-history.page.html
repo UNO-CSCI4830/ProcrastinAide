@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Session History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Empty state -->
+  <div *ngIf="sessions.length === 0; else sessionList" class="empty-message">
+    <ion-icon name="time-outline" size="large"></ion-icon>
+    <p>No sessions yet — start your first Pomodoro!</p>
+  </div>
+
+  <!-- Session list -->
+  <ng-template #sessionList>
+    <ion-list lines="full">
+      <ion-item *ngFor="let s of sessions" detail="true">
+        <ion-label>
+          <h2>{{ s.task }}</h2>
+          <p>{{ s.date | date:'short' }}</p>
+          <p>Pomodoros: {{ s.pomodoros }} — {{ s.duration }} min</p>
+        </ion-label>
+        <ion-icon name="flame-outline" slot="end"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+
+    <!-- Back Button (bottom-left) -->
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="medium" [routerLink]="['/tabs/tab1']">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
