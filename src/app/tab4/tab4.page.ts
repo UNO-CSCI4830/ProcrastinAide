@@ -77,6 +77,8 @@ export class Tab4Page {
       due: this.task.due || null,
       duration: this.task.duration || null,
       category: this.task.category || null,
+      // added to match payload
+      owner: "Me"
     };
 
     // Add to in-memory task service (UI-only for now)

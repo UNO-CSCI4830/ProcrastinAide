@@ -15,7 +15,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TaskService, TaskModel } from '../services/task.service';
+import { TaskService} from '../services/task.service';
+import { TaskModel } from '../data/task.model';
 
 @Component({
   selector: 'app-tab5',
