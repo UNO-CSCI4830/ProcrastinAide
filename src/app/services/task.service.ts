@@ -1,16 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-/**
- * This only stores the task locally
- */
-export interface TaskModel {
-  name: string;
-  due?: string | null;
-  duration?: number | null;
-  category?: string | null;
-  createdAt: string; // timestamp of when created
-  completed?: boolean;
-}
+import { TaskModel } from '../data/task.model';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
