@@ -1,0 +1,8 @@
+{
+	"appId": "com.procrastinaide.app",
+	"appName": "ProcrastinAide",
+	"webDir": "www",
+	"server": {
+		"androidScheme": "https"
+	}
+}
