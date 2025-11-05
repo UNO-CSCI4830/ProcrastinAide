@@ -1,17 +1,20 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, deleteDoc,
-    doc, query, updateDoc, where, getDocs, provideFirestore, getFirestore }
-    from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, query, updateDoc,
+  where, getDocs, provideFirestore, getFirestore, connectFirestoreEmulator }
+  from '@angular/fire/firestore';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app'
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TaskModel } from '../data/task.model';
+import { environment } from 'src/environments/environment'
+import { db } from './firebase.service'
 
 // Define TaskService singleton to handle task management
 @Injectable({ providedIn: 'root' })
 export class TaskService {
   // Set up firestore inject and task collection
-  private firestore: Firestore = inject(Firestore);
-  private tasksCollection = collection(this.firestore, "tasks");
+  //private firestore: Firestore = inject(Firestore);
+  //private tasksCollection = collection(this.firestore, "tasks");
+  private tasksCollection = collection(db, 'tasks');
   
   private tasksSub = new BehaviorSubject<TaskModel[]>([]);
 
@@ -43,7 +46,8 @@ export class TaskService {
   // mark a task as completed/uncompleted based on id
   setCompleted(id: string, completed = true) {
     // find the right document
-    const task = doc(this.firestore, 'tasks/${id}');
+    //const task = doc(this.firestore, 'tasks/${id}');
+    const task = doc(db, 'tasks/${id}');
     // update the completion field
     updateDoc(task, {completed: completed });
   }
@@ -57,7 +61,8 @@ export class TaskService {
   // remove a specific task
   clear(id: string) {
     // find the right document
-    const task = doc(this.firestore, 'tasks.${id}');
+    //const task = doc(this.firestore, 'tasks.${id}');
+    const task = doc(db, 'tasks.${id}');
     // update its completion
     deleteDoc(task);
   }
