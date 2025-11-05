@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "401476337388",
+    "project_id": "so-cool-69f99",
+    "storage_bucket": "so-cool-69f99.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401476337388:android:a84e664fedd3556e916fc9",
+        "android_client_info": {
+          "package_name": "com.procrastinaide.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgjTwktgK6CV7jqD1qdhf7pvfEBgqoclQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
