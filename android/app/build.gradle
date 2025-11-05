@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.procrastinaide.app"
+    namespace "com.procrastinaide.android"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.procrastinaide.app"
+        applicationId "com.procrastinaide.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
