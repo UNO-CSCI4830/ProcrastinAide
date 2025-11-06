@@ -4,7 +4,8 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
-  },  {
+  },
+  {
     path: 'session-history',
     loadComponent: () => import('./session-history/session-history.page').then( m => m.SessionHistoryPage)
   },

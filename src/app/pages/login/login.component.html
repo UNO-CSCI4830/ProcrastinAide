@@ -1,0 +1,28 @@
+<div class="auth-container">
+    <div class="tabs">
+        <button [class.active]="activeTab === 'login'" (click)="setTab('login')">
+            Login
+        </button>
+        <button [class.active]="activeTab === 'register'" (click)="setTab('register')">
+            Register
+        </button>
+    </div>
+
+    <div class="form-container">
+        <form *ngIf="activeTab === 'login'" (ngSubmit)="login()">
+            <h2>Login</h2>
+            <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required>
+            <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <form *ngIf="activeTab === 'register'" (ngSubmit)="register()">
+            <h2>Register</h2>
+            <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required>
+            <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </div>
+</div>
