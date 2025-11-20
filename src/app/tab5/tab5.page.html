@@ -28,6 +28,13 @@
         <div>{{ t.duration ? t.duration + 'm' : '' }}</div>
         <div *ngIf="t.due">{{ t.due | date: 'short' }}</div>
       </ion-note>
+    <ion-icon
+    *ngIf="getPriorityColor(t) as c"
+    slot="end"
+    name="flag-outline"
+    [color]="c"
+    style="width:14px;height:14px;margin-left:8px">
+  </ion-icon>
     </ion-item>
     <ion-item *ngIf="(todo$ | async)?.length === 0">
       <ion-label>No tasks yet — create one in New Task</ion-label>
