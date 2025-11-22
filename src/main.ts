@@ -4,10 +4,15 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-
+import { importProvidersFrom } from '@angular/core';
+import { AppRoutingModule } from './app/app-routing.module';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'
+import { IonicModule } from '@ionic/angular'
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from './environments/environment';
+import { provideFirestore, getFirestore, connectFirestoreEmulator } from '@angular/fire/firestore';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -23,5 +28,12 @@ bootstrapApplication(AppComponent, {
       }
       return firestore;
     }),
+    importProvidersFrom(
+      AppRoutingModule,
+      FormsModule,
+      IonicModule.forRoot(),
+      CommonModule
+    ),
+    provideAuth(() => getAuth())
   ],
 });

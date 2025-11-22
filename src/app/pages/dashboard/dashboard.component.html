@@ -1,0 +1,13 @@
+<div class="dashboard-container" *ngIf="user(); else loading">
+    <h2>Welcome, {{ user()?.email }}</h2>
+
+    <div class="card">
+        <p>You’re successfully logged in! 🎉</p>
+    </div>
+
+    <button (click)="logout()">Logout</button>
+</div>
+
+<ng-template #loading>
+    <p class="loading">Loading user information...</p>
+</ng-template>
