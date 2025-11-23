@@ -13,4 +13,5 @@ export const environment = {
     measurementId: 'imperial' 
   } as FirebaseOptions,
   useEmulators: true
+  // Maybe this needs to be changed to match the actual firebase instance
 };
