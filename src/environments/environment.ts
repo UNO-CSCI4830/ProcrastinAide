@@ -1,14 +1,16 @@
 import type { FirebaseOptions } from 'firebase/app';
 
+// Environment configured to localhost for testing purposes
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'YOUR_API_KEY',
-    authDomain: 'your-project.firebaseapp.com',
-    projectId: 'your-project-id',
-    storageBucket: 'your-project.appspot.com',
+    apiKey: 'APIdontcare',
+    authDomain: 'localhost',
+    projectId: 'procrastinaide-test',
+    storageBucket: 'this-is-a-bucket',
     messagingSenderId: 'YOUR_SENDER_ID',
-    appId: 'YOUR_APP_ID',
-    measurementId: 'YOUR_MEASUREMENT_ID' 
-  } as FirebaseOptions
+    appId: 'idontneednostinkinappid',
+    measurementId: 'imperial' 
+  } as FirebaseOptions,
+  useEmulators: true
 };
