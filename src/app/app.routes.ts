@@ -4,13 +4,13 @@ import { authGuard } from "./guards/auth.guard";
 export const routes: Routes = [
   {
     path: '',
-    //loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
+    loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
+    //canActivate: [authGuard],
+    //loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
     path: 'session-history',
-    canActivate: [authGuard],
+    //canActivate: [authGuard],
     loadComponent: () => import('./session-history/session-history.page').then( m => m.SessionHistoryPage)
   },
   {
@@ -20,7 +20,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    canActivate: [authGuard],
+    //canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
   }

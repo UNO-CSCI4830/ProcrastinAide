@@ -6,19 +6,24 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app'
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TaskModel } from '../data/task.model';
 import { environment } from 'src/environments/environment'
-import { db } from './firebase.service'
+import { FirebaseService } from './firebase.service'
 
 // Define TaskService singleton to handle task management
 @Injectable({ providedIn: 'root' })
 export class TaskService {
+  private db: Firestore;
+  private tasksCollection;
   // Set up firestore inject and task collection
   //private firestore: Firestore = inject(Firestore);
   //private tasksCollection = collection(this.firestore, "tasks");
-  private tasksCollection = collection(db, 'tasks');
+  
   
   private tasksSub = new BehaviorSubject<TaskModel[]>([]);
 
-  constructor() {}
+  constructor(private firebaseService: FirebaseService) {
+    this.db = this.firebaseService.getDbInstance();
+    this.tasksCollection = collection(this.db, 'tasks');
+  }
 
   get tasks$(): Observable<TaskModel[]> {
     //return this.tasksSub.asObservable();
@@ -47,7 +52,7 @@ export class TaskService {
   setCompleted(id: string, completed = true) {
     // find the right document
     //const task = doc(this.firestore, 'tasks/${id}');
-    const task = doc(db, 'tasks/${id}');
+    const task = doc(this.db, 'tasks/${id}');
     // update the completion field
     updateDoc(task, {completed: completed });
   }
@@ -62,7 +67,7 @@ export class TaskService {
   clear(id: string) {
     // find the right document
     //const task = doc(this.firestore, 'tasks.${id}');
-    const task = doc(db, 'tasks.${id}');
+    const task = doc(this.db, 'tasks.${id}');
     // update its completion
     deleteDoc(task);
   }
