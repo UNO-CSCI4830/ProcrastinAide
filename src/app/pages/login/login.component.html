@@ -9,14 +9,14 @@
     </div>
 
     <div class="form-container">
-        <form [hidden]="selectedTab === 'login'" (ngSubmit)="login()">
+        <form [hidden]="selectedTab === 'register'" (ngSubmit)="login()">
             <h2>Login</h2>
             <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required>
             <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required>
             <button type="submit">Login</button>
         </form>
 
-        <form [hidden]="selectedTab === 'register'" (ngSubmit)="register()">
+        <form [hidden]="selectedTab === 'login'" (ngSubmit)="register()">
             <h2>Register</h2>
             <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required>
             <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required>
