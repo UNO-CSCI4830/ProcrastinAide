@@ -32,7 +32,7 @@ describe('Tab5Page', () => {
   });
 
   // --- Method 1: getPriorityColor ---
-  fdescribe('getPriorityColor', () => {
+  describe('getPriorityColor', () => {
     it('should return "danger" if the task if overdue', () => {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
