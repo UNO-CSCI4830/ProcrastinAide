@@ -43,14 +43,14 @@ export class Tab5Page {
   toggleCompleted(t: TaskModel, value: boolean) {
     this.taskService.setCompleted(t.createdAt, value);
   }
-
-  private toMidnight(d: Date) {
+  //private
+  toMidnight(d: Date) {
     const x = new Date(d);
     x.setHours(0, 0, 0, 0);
     return x;
   }
-
-  private daysBetween(today: Date, due: Date): number {
+  //private
+  daysBetween(today: Date, due: Date): number {
     const msPerDay = 24 * 60 * 60 * 1000;
     return Math.floor((this.toMidnight(due).getTime() - this.toMidnight(today).getTime()) / msPerDay);
   }
