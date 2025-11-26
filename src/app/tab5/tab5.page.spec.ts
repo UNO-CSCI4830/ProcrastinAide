@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
 import { Tab5Page } from './tab5.page';
 
 describe('Tab5Page', () => {
@@ -7,6 +7,13 @@ describe('Tab5Page', () => {
   let fixture: ComponentFixture<Tab5Page>;
 
   beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        Tab5Page,
+        RouterTestingModule,   // ✅ FIX
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(Tab5Page);
     component = fixture.componentInstance;
     fixture.detectChanges();
