@@ -23,15 +23,25 @@ describe('AuthService (Karma + Jasmine)', () => {
     let signOutSpy: jasmine.Spy;
     let onAuthSpy: jasmine.Spy;
 
+
+    // Short reference to avoid long TypeScript paths in spyOn()
+    const firebaseAuthFunctions = {
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+        onAuthStateChanged
+    };
+
+
     beforeEach(() => {
         // Create spy for Auth object
-        authMock = jasmine.createSpyObj<Auth>('Auth', ['']);
+        authMock = {} as Auth;
 
         // Spy on Firebase functions BEFORE TestBed creates service
         signInSpy = spyOn<any>(firebaseAuthFunctions, 'signInWithEmailAndPassword').and.returnValue(Promise.resolve());
         registerSpy = spyOn<any>(firebaseAuthFunctions, 'createUserWithEmailAndPassword').and.returnValue(Promise.resolve());
         signOutSpy = spyOn<any>(firebaseAuthFunctions, 'signOut').and.returnValue(Promise.resolve());
-        onAuthSpy = spyOn<any>(firebaseAuthFunctions, 'onAuthStateChanged').and.callFake((auth, cb) => {
+        onAuthSpy = spyOn<any>(firebaseAuthFunctions, 'onAuthStateChanged').and.callFake((auth: Auth, cb: (user: User | null) => void) => {
             // Do nothing for auth-state listener in unit tests
         });
 
@@ -44,15 +54,6 @@ describe('AuthService (Karma + Jasmine)', () => {
 
         service = TestBed.inject(AuthService);
     });
-
-    // Short reference to avoid long TypeScript paths in spyOn()
-    const firebaseAuthFunctions = {
-        signInWithEmailAndPassword,
-        createUserWithEmailAndPassword,
-        signOut,
-        onAuthStateChanged
-    };
-
     // --------------------------------------------------------------------
     // TEST 1 — login()
     // --------------------------------------------------------------------
@@ -69,7 +70,7 @@ describe('AuthService (Karma + Jasmine)', () => {
     // --------------------------------------------------------------------
     // TEST 2 — register()
     // --------------------------------------------------------------------
-    fit('should call Firebase createUserWithEmailAndPassword when register() is used', async () => {
+    it('should call Firebase createUserWithEmailAndPassword when register() is used', async () => {
         await service.register('new@example.com', 'newpass');
 
         expect(registerSpy).toHaveBeenCalledWith(
