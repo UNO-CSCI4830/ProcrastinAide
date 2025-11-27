@@ -2,116 +2,92 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { Auth, User } from '@angular/fire/auth';
 
-// Firebase Auth functions we need to mock
-import {
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-} from '@angular/fire/auth';
+describe('AuthService', () => {
+  let service: AuthService;
+  let authMock: jasmine.SpyObj<Auth>;
 
-// -------------------------------
-// Jasmine spies (NOT Jest!)
-// -------------------------------
-describe('AuthService (Karma + Jasmine)', () => {
-    let service: AuthService;
-    let authMock: jasmine.SpyObj<Auth>;
-
-    // Create spies for Firebase functions
-    let signInSpy: jasmine.Spy;
-    let registerSpy: jasmine.Spy;
-    let signOutSpy: jasmine.Spy;
-    let onAuthSpy: jasmine.Spy;
-
-
-    // Short reference to avoid long TypeScript paths in spyOn()
-    const firebaseAuthFunctions = {
-        signInWithEmailAndPassword,
-        createUserWithEmailAndPassword,
-        signOut,
-        onAuthStateChanged
-    };
-
-
-    beforeEach(() => {
-        // Create spy for Auth object
-        authMock = {} as Auth;
-
-        // Spy on Firebase functions BEFORE TestBed creates service
-        signInSpy = spyOn<any>(firebaseAuthFunctions, 'signInWithEmailAndPassword').and.returnValue(Promise.resolve());
-        registerSpy = spyOn<any>(firebaseAuthFunctions, 'createUserWithEmailAndPassword').and.returnValue(Promise.resolve());
-        signOutSpy = spyOn<any>(firebaseAuthFunctions, 'signOut').and.returnValue(Promise.resolve());
-        onAuthSpy = spyOn<any>(firebaseAuthFunctions, 'onAuthStateChanged').and.callFake((auth: Auth, cb: (user: User | null) => void) => {
-            // Do nothing for auth-state listener in unit tests
-        });
-
-        TestBed.configureTestingModule({
-            providers: [
-                AuthService,
-                { provide: Auth, useValue: authMock }
-            ]
-        });
-
-        service = TestBed.inject(AuthService);
-    });
-    // --------------------------------------------------------------------
-    // TEST 1 — login()
-    // --------------------------------------------------------------------
-    it('should call Firebase signInWithEmailAndPassword when login() is used', async () => {
-        await service.login('test@example.com', 'password123');
-
-        expect(signInSpy).toHaveBeenCalledWith(
-            authMock,
-            'test@example.com',
-            'password123'
-        );
+  beforeEach(() => {
+    // Create a Spy object for Auth, but we only need its *instance*, not its methods,
+    // because Firebase auth methods like signInWithEmailAndPassword are imported functions.
+    authMock = jasmine.createSpyObj<Auth>('Auth', [], {
+      currentUser: null
     });
 
-    // --------------------------------------------------------------------
-    // TEST 2 — register()
-    // --------------------------------------------------------------------
-    it('should call Firebase createUserWithEmailAndPassword when register() is used', async () => {
-        await service.register('new@example.com', 'newpass');
+    // Spy on Firebase helper functions
+    spyOn(require('@angular/fire/auth'), 'onAuthStateChanged')
+      .and.callFake((_auth: Auth, cb: (user: User | null) => void) => {
+        cb(null);
+      });
 
-        expect(registerSpy).toHaveBeenCalledWith(
-            authMock,
-            'new@example.com',
-            'newpass'
-        );
+
+    spyOn(require('@angular/fire/auth'), 'signInWithEmailAndPassword')
+      .and.returnValue(Promise.resolve({} as User)); // mock success
+
+    spyOn(require('@angular/fire/auth'), 'createUserWithEmailAndPassword')
+      .and.returnValue(Promise.resolve({} as User));
+
+    spyOn(require('@angular/fire/auth'), 'signOut')
+      .and.returnValue(Promise.resolve());
+
+    TestBed.configureTestingModule({
+      providers: [
+        AuthService,
+        { provide: Auth, useValue: authMock }
+      ],
     });
 
-    // --------------------------------------------------------------------
-    // TEST 3 — logout()
-    // --------------------------------------------------------------------
-    it('should call Firebase signOut when logout() is used', async () => {
-        await service.logout();
+    service = TestBed.inject(AuthService);
+  });
 
-        expect(signOutSpy).toHaveBeenCalledWith(authMock);
-    });
+  /** --------------------------------------------------------
+   * TEST: login()
+   * -------------------------------------------------------- */
+  it('should call signInWithEmailAndPassword on login()', async () => {
+    const email = 'test@example.com';
+    const password = '123456';
 
-    // --------------------------------------------------------------------
-    // TEST 4 — isAuthenticated()
-    // --------------------------------------------------------------------
-    it('should return true when currentUser signal has a user', () => {
-        const fakeUser = { uid: '111' } as User;
-        service.currentUser.set(fakeUser);
+    await service.login(email, password);
 
-        expect(service.isAuthenticated()).toBeTrue();
-    });
+    const spy = require('@angular/fire/auth').signInWithEmailAndPassword;
+    expect(spy).toHaveBeenCalledWith(authMock, email, password);
+  });
 
-    it('should return false when user is null', () => {
-        service.currentUser.set(null);
+  /** --------------------------------------------------------
+   * TEST: register()
+   * -------------------------------------------------------- */
+  it('should call createUserWithEmailAndPassword on register()', async () => {
+    const email = 'new@example.com';
+    const password = 'password';
 
-        expect(service.isAuthenticated()).toBeFalse();
-    });
+    await service.register(email, password);
 
-    // --------------------------------------------------------------------
-    // TEST 5 — user()
-    // --------------------------------------------------------------------
-    it('should return the current user from the signal', () => {
-        const fakeUser = { uid: 'XYZ' } as User;
-        service.currentUser.set(fakeUser);
+    const spy = require('@angular/fire/auth').createUserWithEmailAndPassword;
+    expect(spy).toHaveBeenCalledWith(authMock, email, password);
+  });
 
-        expect(service.user()).toEqual(fakeUser);
-    });
+  /** --------------------------------------------------------
+   * TEST: logout()
+   * -------------------------------------------------------- */
+  it('should call signOut on logout()', async () => {
+    await service.logout();
+
+    const spy = require('@angular/fire/auth').signOut;
+    expect(spy).toHaveBeenCalledWith(authMock);
+  });
+
+  /** --------------------------------------------------------
+   * TEST: isAuthenticated() & user()
+   * -------------------------------------------------------- */
+  it('should return false when not authenticated', () => {
+    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.user()).toBeNull();
+  });
+
+  it('should return true when a user is authenticated', () => {
+    const fakeUser = { uid: '123' } as User;
+    service.currentUser.set(fakeUser);
+
+    expect(service.isAuthenticated()).toBeTrue();
+    expect(service.user()).toEqual(fakeUser);
+  });
 });
