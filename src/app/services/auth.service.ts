@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { Auth, User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, connectAuthEmulator } from '@angular/fire/auth';
+import { environment } from '../../environments/environment'
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,7 @@ export class AuthService {
 
     /** LOGIN user with Firebase Auth */
     async login(email: string, password: string) {
+        console.log(email + " " + password);
         await signInWithEmailAndPassword(this.auth, email, password);
     }
 
@@ -40,6 +42,3 @@ export class AuthService {
         return this.currentUser();
     }
 }
-
-
-
