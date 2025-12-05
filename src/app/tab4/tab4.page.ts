@@ -77,6 +77,7 @@ export class Tab4Page {
       due: this.task.due || null,
       duration: this.task.duration || null,
       category: this.task.category || null,
+      owner: '' //TOOD update this
     };
 
     // Add to in-memory task service (UI-only for now)
