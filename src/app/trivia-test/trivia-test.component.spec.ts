@@ -9,8 +9,8 @@ describe('TriviaTestComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TriviaTestComponent ],
-      imports: [IonicModule.forRoot()]
+      // declarations: [ TriviaTestComponent ],
+      imports: [IonicModule.forRoot(), TriviaTestComponent ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TriviaTestComponent);
