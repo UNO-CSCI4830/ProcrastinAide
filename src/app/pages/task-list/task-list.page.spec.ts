@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Tab5Page } from './tab5.page';
+import { TaskListPage } from './task-list.page';
 
-describe('Tab5Page', () => {
-  let component: Tab5Page;
-  let fixture: ComponentFixture<Tab5Page>;
+describe('TaskListPage', () => {
+  let component: TaskListPage;
+  let fixture: ComponentFixture<TaskListPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        Tab5Page,
+        TaskListPage,
         RouterTestingModule,   // ✅ FIX
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Tab5Page);
+    fixture = TestBed.createComponent(TaskListPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

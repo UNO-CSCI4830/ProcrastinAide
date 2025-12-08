@@ -24,12 +24,12 @@ export const routes: Routes = [
       {
         path: 'tab4',
         loadComponent: () =>
-          import('../tab4/tab4.page').then((m) => m.Tab4Page),
+          import('../pages/new-task/new-task.page').then((m) => m.NewTaskPage),
       },
       {
         path: 'tab5',
         loadComponent: () =>
-          import('../tab5/tab5.page').then((m) => m.Tab5Page),
+          import('../pages/task-list/task-list.page').then((m) => m.TaskListPage),
       },
       {
         path: '',

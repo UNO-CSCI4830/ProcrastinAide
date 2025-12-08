@@ -15,12 +15,13 @@ import {
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { TaskService } from '../services/task.service';
+import { TaskService } from '../../services/task.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-tab4',
-  templateUrl: 'tab4.page.html',
-  styleUrls: ['tab4.page.scss'],
+  selector: 'app-new-task',
+  templateUrl: 'new-task.page.html',
+  styleUrls: ['new-task.page.scss'],
   imports: [
     CommonModule,
     JsonPipe,
@@ -40,7 +41,7 @@ import { TaskService } from '../services/task.service';
   ],
 })
 
-export class Tab4Page {
+export class NewTaskPage {
   // local model for the form
   task: {
     name: string;
@@ -61,7 +62,10 @@ export class Tab4Page {
     { value: 'other', label: 'Other' },
   ];
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private taskService: TaskService,
+    private router: Router
+  ) {}
 
   // called when user taps "Add Task" — currently local-only (console + reset)
   addTask() {
@@ -85,5 +89,9 @@ export class Tab4Page {
 
     // reset form
     this.task = { name: '', due: null, duration: null, category: null };
+
+    // route back to task list
+    this.router.navigate(['/task-list'])
+
   }
 }
