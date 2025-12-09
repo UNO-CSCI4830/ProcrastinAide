@@ -16,12 +16,18 @@
   <app-explore-container name="Tab 1 page"></app-explore-container>
   <app-trivia-test></app-trivia-test>
 
-  <!-- Spacer to create scroll space -->
-  <div style="height: 700px;"></div>
+  <!-- Session History button placed lower -->
+  <!-- Demo: recommend next task after a session -->
+  <ion-button expand="block" color="primary" (click)="showRecommendationDemo()">
+    Demo: Recommend Next Task
+  </ion-button>
 
   <!-- Session History button placed lower -->
   <ion-button expand="block" color="medium" [routerLink]="['/session-history']">
     View Session History
   </ion-button>
+
+  <!-- Spacer to create scroll space -->
+  <div style="height: 700px;"></div>
   
 </ion-content>

@@ -27,6 +27,7 @@
       <ion-note slot="end">
         <div>{{ t.duration ? t.duration + 'm' : '' }}</div>
         <div *ngIf="t.due">{{ t.due | date: 'short' }}</div>
+        <div *ngIf="t.priority">Priority: {{ t.priority }}</div>
       </ion-note>
     <ion-icon
     *ngIf="getPriorityColor(t) as c"
@@ -55,6 +56,7 @@
       <ion-note slot="end">
         <div>{{ t.duration ? t.duration + 'm' : '' }}</div>
         <div>{{ t.createdAt | date: 'short' }}</div>
+        <div *ngIf="t.priority">Priority: {{ t.priority }}</div>
       </ion-note>
     </ion-item>
     <ion-item *ngIf="(completed$ | async)?.length === 0">

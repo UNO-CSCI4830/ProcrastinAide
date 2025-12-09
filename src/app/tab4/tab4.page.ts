@@ -47,11 +47,13 @@ export class Tab4Page {
     due?: string | null;
     duration?: number | null;
     category?: string | null;
+    priority?: number | null;
   } = {
     name: '',
     due: null,
     duration: null,
     category: null,
+    priority: null,
   };
 
   categories = [
@@ -77,6 +79,7 @@ export class Tab4Page {
       due: this.task.due || null,
       duration: this.task.duration || null,
       category: this.task.category || null,
+      priority: this.task.priority || null,
       owner: '' //TOOD update this
     };
 
