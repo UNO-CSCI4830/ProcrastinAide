@@ -17,29 +17,35 @@
     <h2>To Do</h2>
   </div>
 
-  <ion-list>
-    <ion-item *ngFor="let t of todo$ | async">
-      <ion-checkbox slot="start" [checked]="t.completed" (ionChange)="toggleCompleted(t, $event.detail.checked)"></ion-checkbox>
-      <ion-label>
-        <h3>{{ t.name }}</h3>
-        <p *ngIf="t.category">{{ t.category }}</p>
-      </ion-label>
-      <ion-note slot="end">
-        <div>{{ t.duration ? t.duration + 'm' : '' }}</div>
-        <div *ngIf="t.due">{{ t.due | date: 'short' }}</div>
-      </ion-note>
+<ion-list>
+  <ion-item *ngFor="let t of todo$ | async" (click)="editTask(t)">
+    <ion-checkbox
+      slot="start"
+      [checked]="t.completed"
+      (ionChange)="toggleCompleted(t, $event.detail.checked)"
+      (click)="$event.stopPropagation()">
+    </ion-checkbox>
+
+    <ion-label>
+      <h3>{{ t.name }}</h3>
+      <p *ngIf="t.category">{{ t.category }}</p>
+    </ion-label>
+
+    <ion-note slot="end">
+      <div>{{ t.duration ? t.duration + 'm' : '' }}</div>
+      <div *ngIf="t.due">{{ t.due | date: 'short' }}</div>
+    </ion-note>
+
     <ion-icon
-    *ngIf="getPriorityColor(t) as c"
-    slot="end"
-    name="flag-outline"
-    [color]="c"
-    style="width:14px;height:14px;margin-left:8px">
-  </ion-icon>
-    </ion-item>
-    <ion-item *ngIf="(todo$ | async)?.length === 0">
-      <ion-label>No tasks yet — create one in New Task</ion-label>
-    </ion-item>
-  </ion-list>
+      *ngIf="getPriorityColor(t) as c"
+      slot="end"
+      name="flag-outline"
+      [color]="c"
+      style="width:14px;height:14px;margin-left:8px">
+    </ion-icon>
+  </ion-item>
+</ion-list>
+
 
   <div class="section-title">
     <h2>Completed</h2>

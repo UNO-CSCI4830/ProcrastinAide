@@ -1,23 +1,32 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, query, updateDoc,
-  where, getDocs, provideFirestore, getFirestore, connectFirestoreEmulator }
-  from '@angular/fire/firestore';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app'
+import {
+  Firestore,
+  addDoc,
+  collection,
+  collectionData,
+  deleteDoc,
+  doc,
+  query,
+  updateDoc,
+  where,
+  getDocs,
+  provideFirestore,
+  getFirestore,
+  connectFirestoreEmulator
+} from '@angular/fire/firestore';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TaskModel } from '../data/task.model';
-import { environment } from 'src/environments/environment'
-import { FirebaseService } from './firebase.service'
+import { environment } from 'src/environments/environment';
+import { FirebaseService } from './firebase.service';
 
 // Define TaskService singleton to handle task management
 @Injectable({ providedIn: 'root' })
 export class TaskService {
   private db: Firestore;
   private tasksCollection;
-  // Set up firestore inject and task collection
-  //private firestore: Firestore = inject(Firestore);
-  //private tasksCollection = collection(this.firestore, "tasks");
-  
-  
+
+  // (still here if you ever want local BehaviorSubject again)
   private tasksSub = new BehaviorSubject<TaskModel[]>([]);
 
   constructor(private firebaseService: FirebaseService) {
@@ -25,50 +34,39 @@ export class TaskService {
     this.tasksCollection = collection(this.db, 'tasks');
   }
 
+  /** Live stream of tasks from Firestore, with doc id mapped to `id` */
   get tasks$(): Observable<TaskModel[]> {
-    //return this.tasksSub.asObservable();
     return collectionData(this.tasksCollection, { idField: 'id' }) as Observable<TaskModel[]>;
   }
 
+  /** CREATE a new task in Firestore */
   addTask(task: Omit<TaskModel, 'id' | 'createdAt'>) {
     // configure the task to add
-    const newTask: TaskModel = { ...task, createdAt: new Date().toISOString(), completed: false };
-    //const current = this.tasksSub.getValue();
-    //this.tasksSub.next([newTask, ...current]);
-    addDoc(this.tasksCollection, task);
+    const newTask: TaskModel = {
+      ...task,
+      createdAt: new Date().toISOString(),
+      completed: false,
+    };
+
+    // write to Firestore
+    return addDoc(this.tasksCollection, newTask);
   }
 
-  /*
-  // mark a task as completed/uncompleted by createdAt id
-  setCompleted(createdAt: string, completed = true) {
-    const updated = this.tasksSub.getValue().map((t) =>
-      t.createdAt === createdAt ? { ...t, completed } : t
-    );
-    this.tasksSub.next(updated);
+  /** UPDATE an existing task (used for the Edit Task screen) */
+  updateTask(id: string, updates: Partial<Omit<TaskModel, 'id' | 'createdAt'>>) {
+    const taskRef = doc(this.db, `tasks/${id}`);
+    return updateDoc(taskRef, updates);
   }
-  */
 
-  // mark a task as completed/uncompleted based on id
+  /** Mark a task as completed / not completed, by its Firestore id */
   setCompleted(id: string, completed = true) {
-    // find the right document
-    //const task = doc(this.firestore, 'tasks/${id}');
-    const task = doc(this.db, 'tasks/${id}');
-    // update the completion field
-    updateDoc(task, {completed: completed });
+    const taskRef = doc(this.db, `tasks/${id}`);
+    return updateDoc(taskRef, { completed });
   }
 
-  /* This is not possible in FireStore
-  clear() {
-    this.tasksSub.next([]);
-  }
-  */
-
-  // remove a specific task
+  /** Delete a specific task by id */
   clear(id: string) {
-    // find the right document
-    //const task = doc(this.firestore, 'tasks.${id}');
-    const task = doc(this.db, 'tasks.${id}');
-    // update its completion
-    deleteDoc(task);
+    const taskRef = doc(this.db, `tasks/${id}`);
+    return deleteDoc(taskRef);
   }
 }

@@ -19,7 +19,8 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { TaskService } from '../../services/task.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-task',
@@ -46,8 +47,11 @@ import { Router } from '@angular/router';
     IonIcon
   ],
 })
-
 export class NewTaskPage {
+  // are we editing an existing task?
+  isEditMode = false;
+  private taskId: string | null = null;
+
   // local model for the form
   task: {
     name: string;
@@ -70,39 +74,73 @@ export class NewTaskPage {
 
   constructor(
     private taskService: TaskService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    // Check if there's an :id in the route -> edit mode
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (!id) {
+        // create mode
+        this.isEditMode = false;
+        this.taskId = null;
+        return;
+      }
 
-  // called when user taps "Add Task" — currently local-only (console + reset)
+      // edit mode
+      this.isEditMode = true;
+      this.taskId = id;
+
+      // grab the existing task once and prefill the form
+      this.taskService.tasks$
+        .pipe(take(1))
+        .subscribe(tasks => {
+          const existing = tasks.find(t => t.id === id);
+          if (!existing) {
+            return;
+          }
+
+          this.task = {
+            name: existing.name,
+            due: existing.due ?? null,
+            duration: existing.duration ?? null,
+            category: existing.category ?? null,
+          };
+        });
+    });
+  }
+
+  // called when user taps "Add Task" / "Save Changes"
   addTask() {
     if (!this.task.name || this.task.name.trim() === '') {
-      // simple client-side validation — keep minimal to avoid introducing AlertController
       console.warn('Task name is required');
       return;
     }
 
-    // Prepare a copy of task to send to backend later
     const payload = {
       name: this.task.name.trim(),
       due: this.task.due || null,
       duration: this.task.duration || null,
       category: this.task.category || null,
-      owner: '' //TOOD update this
+      owner: '' // TODO: wire user later
     };
 
-    // Add to in-memory task service (UI-only for now)
-    this.taskService.addTask(payload);
-
-    // reset form
-    this.task = { name: '', due: null, duration: null, category: null };
-
-    // route back to task list
-    this.router.navigate(['/task-list'])
-
+    if (this.isEditMode && this.taskId) {
+      // EDIT existing task
+      this.taskService.updateTask(this.taskId, payload as any);
+      // immediately go back to Your Tasks
+      this.router.navigate(['/task-list']);
+    } else {
+      // CREATE new task
+      this.taskService.addTask(payload as any);
+      // reset local form (not super necessary since we're leaving)
+      this.task = { name: '', due: null, duration: null, category: null };
+      // go back to Your Tasks
+      this.router.navigate(['/task-list']);
+    }
   }
 
   goBack() {
     this.router.navigate(['/task-list']);
   }
-
 }
