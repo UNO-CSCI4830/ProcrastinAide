@@ -1,5 +1,27 @@
 <ion-content class="ion-padding">
-    <h2>Trivia Test</h2>
-    <p>{{ question?.question }}</p>
-    <ion-button (click)="loadTrivia()">Next Question</ion-button>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ currentQuestion?.question }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item 
+          *ngFor="let opt of currentQuestion?.options" 
+          (click)="selectOption(opt)"
+          button
+          detail="false">
+
+          {{ opt }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Feedback Section -->
+  <div *ngIf="showFeedback" style="text-align:center; margin-top: 10px;">
+    <h2>{{ feedback }}</h2>
+  </div>
+
 </ion-content>
