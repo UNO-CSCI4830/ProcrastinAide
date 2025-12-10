@@ -9,7 +9,7 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 4</ion-title>
+      <ion-title size="large">New Task</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -52,7 +52,8 @@
   </ion-list>
 
   <div class="actions">
-    <ion-button expand="block" color="primary" (click)="addTask()" [disabled]="!task.name || task.name.trim() === ''">
+    <ion-button expand="block" color="primary"
+        (click)="addTask()" [disabled]="!task.name || task.name.trim() === ''">
       Add Task
     </ion-button>
   </div>
@@ -61,4 +62,11 @@
   <div class="debug">
     <pre>{{ task | json }}</pre>
   </div>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="medium" (click)="goBack()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { TriviaTestComponent } from "./trivia-test/trivia-test.component";
+import { TriviaTestComponent } from "./pages/trivia-test/trivia-test.component";
 
 @Component({
   selector: 'app-root',
