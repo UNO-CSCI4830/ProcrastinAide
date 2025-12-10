@@ -34,3 +34,25 @@ button:hover {
     color: gray;
     margin-top: 3rem;
 }
+
+.center {
+    text-align: center;
+    border-color: aqua;
+}
+
+canvas {
+  display: block;
+  max-width: 250px;
+  max-height: 250px;
+  text-align: center;
+  
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center;        
+  width: 100%;
+  margin-top: 20px;
+
+}
