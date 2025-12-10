@@ -1,5 +1,247 @@
 [
-  { "question": "What is the capital of France?", "answer": "Paris" },
-  { "question": "Which planet is known as the Red Planet?", "answer": "Mars" },
-  { "question": "Who wrote 'To Kill a Mockingbird'?", "answer": "Harper Lee" }
+  {
+    "question": "What is the capital of France?",
+    "answer": "Paris",
+    "options": ["Paris", "London", "Rome", "Berlin"]
+  },
+  {
+    "question": "Who is the Best NFL team with no bias whatsoever?",
+    "answer": "CHIEFS",
+    "options": ["CHIEFS", "America", "Diet Coke", "Iphone Chargers"]
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "answer": "Mars",
+    "options": ["Mars", "Jupiter", "Venus", "Mercury"]
+  },
+  {
+    "question": "What is the largest mammal on Earth?",
+    "answer": "Blue whale",
+    "options": ["Blue whale", "Elephant", "Giraffe", "Hippopotamus"]
+  },
+  {
+    "question": "Who wrote 'To Kill a Mockingbird'?",
+    "answer": "Harper Lee",
+    "options": ["Harper Lee", "Mark Twain", "Ernest Hemingway", "Jane Austen"]
+  },
+  {
+    "question": "How many continents are there?",
+    "answer": "7",
+    "options": ["7", "5", "6", "8"]
+  },
+  {
+    "question": "What gas do plants absorb from the atmosphere?",
+    "answer": "Carbon dioxide",
+    "options": ["Carbon dioxide", "Oxygen", "Nitrogen", "Helium"]
+  },
+  {
+    "question": "What is the hardest natural substance?",
+    "answer": "Diamond",
+    "options": ["Diamond", "Gold", "Steel", "Granite"]
+  },
+  {
+    "question": "How many sides does a hexagon have?",
+    "answer": "6",
+    "options": ["6", "5", "7", "8"]
+  },
+  {
+    "question": "Which ocean is the largest?",
+    "answer": "Pacific Ocean",
+    "options": ["Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean"]
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "answer": "Leonardo da Vinci",
+    "options": ["Leonardo da Vinci", "Michelangelo", "Raphael", "Vincent van Gogh"]
+  },
+  {
+    "question": "What is the largest planet in our solar system?",
+    "answer": "Jupiter",
+    "options": ["Jupiter", "Saturn", "Earth", "Neptune"]
+  },
+  {
+    "question": "How many legs does a spider have?",
+    "answer": "8",
+    "options": ["8", "6", "10", "12"]
+  },
+  {
+    "question": "What is H2O commonly known as?",
+    "answer": "Water",
+    "options": ["Water", "Oxygen", "Hydrogen", "Salt"]
+  },
+  {
+    "question": "Which animal is known as the King of the Jungle?",
+    "answer": "Lion",
+    "options": ["Lion", "Tiger", "Leopard", "Cheetah"]
+  },
+  {
+    "question": "What year did the Titanic sink?",
+    "answer": "1912",
+    "options": ["1912", "1905", "1920", "1898"]
+  },
+  {
+    "question": "Which instrument has 88 keys?",
+    "answer": "Piano",
+    "options": ["Piano", "Guitar", "Violin", "Flute"]
+  },
+  {
+    "question": "How many days are in a leap year?",
+    "answer": "366",
+    "options": ["366", "365", "367", "364"]
+  },
+  {
+    "question": "Which country is home to the kangaroo?",
+    "answer": "Australia",
+    "options": ["Australia", "New Zealand", "South Africa", "Brazil"]
+  },
+  {
+    "question": "What is the tallest mountain in the world?",
+    "answer": "Mount Everest",
+    "options": ["Mount Everest", "K2", "Kangchenjunga", "Mount Kilimanjaro"]
+  },
+  {
+    "question": "What do bees produce?",
+    "answer": "Honey",
+    "options": ["Honey", "Wax", "Milk", "Oil"]
+  },
+  {
+    "question": "Which planet is closest to the sun?",
+    "answer": "Mercury",
+    "options": ["Mercury", "Venus", "Earth", "Mars"]
+  },
+  {
+    "question": "What currency is used in Japan?",
+    "answer": "Yen",
+    "options": ["Yen", "Dollar", "Euro", "Won"]
+  },
+  {
+    "question": "What is the main language spoken in Brazil?",
+    "answer": "Portuguese",
+    "options": ["Portuguese", "Spanish", "English", "French"]
+  },
+  {
+    "question": "What color do you get when you mix red and white?",
+    "answer": "Pink",
+    "options": ["Pink", "Purple", "Orange", "Brown"]
+  },
+  {
+    "question": "How many teeth does an adult human usually have?",
+    "answer": "32",
+    "options": ["32", "28", "30", "34"]
+  },
+  {
+    "question": "Which metal is liquid at room temperature?",
+    "answer": "Mercury",
+    "options": ["Mercury", "Aluminum", "Silver", "Copper"]
+  },
+  {
+    "question": "Which country invented pizza?",
+    "answer": "Italy",
+    "options": ["Italy", "United States", "France", "Spain"]
+  },
+  {
+    "question": "What is the biggest land animal?",
+    "answer": "African elephant",
+    "options": ["African elephant", "Hippo", "Rhino", "Polar bear"]
+  },
+  {
+    "question": "What is the main ingredient in guacamole?",
+    "answer": "Avocado",
+    "options": ["Avocado", "Tomato", "Lettuce", "Cucumber"]
+  },
+  {
+    "question": "What is the freezing point of water?",
+    "answer": "0°C (32°F)",
+    "options": ["0°C (32°F)", "10°C", "5°C", "-10°C"]
+  },
+  {
+    "question": "Which planet has rings?",
+    "answer": "Saturn",
+    "options": ["Saturn", "Jupiter", "Uranus", "Neptune"]
+  },
+  {
+    "question": "What do cows drink?",
+    "answer": "Water",
+    "options": ["Water", "Milk", "Juice", "Tea"]
+  },
+  {
+    "question": "What is the largest organ of the human body?",
+    "answer": "Skin",
+    "options": ["Skin", "Liver", "Heart", "Lungs"]
+  },
+  {
+    "question": "How many minutes are in an hour?",
+    "answer": "60",
+    "options": ["60", "30", "90", "120"]
+  },
+  {
+    "question": "Which bird cannot fly?",
+    "answer": "Ostrich",
+    "options": ["Ostrich", "Penguin", "Chicken", "Duck"]
+  },
+  {
+    "question": "Which ocean is off the California coast?",
+    "answer": "Pacific Ocean",
+    "options": ["Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean"]
+  },
+  {
+    "question": "What shape has three sides?",
+    "answer": "Triangle",
+    "options": ["Triangle", "Square", "Pentagon", "Hexagon"]
+  },
+  {
+    "question": "Which fruit is yellow and curved?",
+    "answer": "Banana",
+    "options": ["Banana", "Mango", "Apple", "Pear"]
+  },
+  {
+    "question": "How many fingers do humans typically have?",
+    "answer": "10",
+    "options": ["10", "8", "12", "5"]
+  },
+  {
+    "question": "What vacation spot has a giant mouse mascot?",
+    "answer": "Disneyland",
+    "options": ["Disneyland", "Six Flags", "Universal Studios", "SeaWorld"]
+  },
+  {
+    "question": "What do you call a baby dog?",
+    "answer": "Puppy",
+    "options": ["Puppy", "Cub", "Kitten", "Chick"]
+  },
+  {
+    "question": "What color is a stop sign?",
+    "answer": "Red",
+    "options": ["Red", "Blue", "Green", "Yellow"]
+  },
+  {
+    "question": "Which direction does the sun rise?",
+    "answer": "East",
+    "options": ["East", "West", "North", "South"]
+  },
+  {
+    "question": "Which food group does bread belong to?",
+    "answer": "Grains",
+    "options": ["Grains", "Dairy", "Fruit", "Protein"]
+  },
+  {
+    "question": "How many months are in a year?",
+    "answer": "12",
+    "options": ["12", "10", "11", "13"]
+  },
+  {
+    "question": "What planet do we live on?",
+    "answer": "Earth",
+    "options": ["Earth", "Mars", "Venus", "Jupiter"]
+  },
+  {
+    "question": "What instrument do you hit with sticks?",
+    "answer": "Drums",
+    "options": ["Drums", "Piano", "Harp", "Flute"]
+  },
+  {
+    "question": "What is the opposite of 'hot'?",
+    "answer": "Cold",
+    "options": ["Cold", "Warm", "Cool", "Dry"]
+  }
 ]
