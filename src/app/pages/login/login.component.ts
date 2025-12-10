@@ -37,7 +37,7 @@ export class LoginComponent {
         }
     }
 
-    async register() {
+    /*async register() {
         if (this.password !== this.confirmPassword) {
             this.errorMessage = 'Passwords do not match.';
             return;
@@ -49,5 +49,18 @@ export class LoginComponent {
             console.error(error);
             this.errorMessage = error.message;
         }
+    }*/
+   async register() {
+    if (this.password !== this.confirmPassword) {
+        this.errorMessage = "Passwords do not match.";
+        return;
+    }
+
+    try {
+        await this.auth.register(this.email, this.password);
+        this.router.navigate(['/dashboard']);
+    } catch (err: any) {
+        this.errorMessage = err.message;
+    }
     }
 }
