@@ -14,8 +14,8 @@ import {
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { TaskService } from '../services/task.service';
-import { TaskModel } from '../data/task.model';
+import { TaskService } from '../../services/task.service';
+import { TaskModel } from '../../data/task.model';
 
 // Ionicons
 import { addIcons } from 'ionicons';
