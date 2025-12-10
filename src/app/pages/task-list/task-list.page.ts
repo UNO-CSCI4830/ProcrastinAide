@@ -16,10 +16,11 @@ import {
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TaskService } from '../../services/task.service';
-import { TaskModel } from '../../data/task.model'
+import { TaskModel } from '../../data/task.model';
 import { addIcons } from 'ionicons';
 import { ellipse, flagOutline } from 'ionicons/icons';
 
@@ -52,15 +53,33 @@ export class TaskListPage {
   todo$: Observable<TaskModel[]>;
   completed$: Observable<TaskModel[]>;
 
-  constructor(private taskService: TaskService) {
+  // ✅ inject Router here
+  constructor(
+    private taskService: TaskService,
+    private router: Router
+  ) {
     this.tasks$ = this.taskService.tasks$;
     this.todo$ = this.tasks$.pipe(map((list) => list.filter((t) => !t.completed)));
     this.completed$ = this.tasks$.pipe(map((list) => list.filter((t) => t.completed)));
     addIcons({ ellipse, flagOutline });
   }
 
+  // ✅ use Firestore doc id, not createdAt
   toggleCompleted(t: TaskModel, value: boolean) {
-    this.taskService.setCompleted(t.createdAt, value);
+    if (!t.id) {
+      console.warn('Task has no id, cannot toggle completed');
+      return;
+    }
+    this.taskService.setCompleted(t.id, value);
+  }
+
+  // ✅ called when user taps the task row (to edit)
+  editTask(t: TaskModel) {
+    if (!t.id) {
+      console.warn('Task has no id, cannot edit');
+      return;
+    }
+    this.router.navigate(['/new-task', t.id]);
   }
 
   private toMidnight(d: Date) {
@@ -71,7 +90,9 @@ export class TaskListPage {
 
   private daysBetween(today: Date, due: Date): number {
     const msPerDay = 24 * 60 * 60 * 1000;
-    return Math.floor((this.toMidnight(due).getTime() - this.toMidnight(today).getTime()) / msPerDay);
+    return Math.floor(
+      (this.toMidnight(due).getTime() - this.toMidnight(today).getTime()) / msPerDay
+    );
   }
 
   getPriorityColor(t: TaskModel): PriorityColor {
@@ -82,8 +103,6 @@ export class TaskListPage {
     if (diff < 0)  return 'danger';   // overdue -> red
     if (diff === 0) return 'warning'; // due today -> yellow
     if (diff >= 1) return 'success';  // 1+ days -> green
-    return null;                      // tomorrow -> no flag
+    return null;
   }
-
-
 }
