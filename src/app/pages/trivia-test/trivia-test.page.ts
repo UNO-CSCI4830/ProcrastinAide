@@ -4,28 +4,30 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonButton,
+  IonFab,
+  IonFabButton,
+  IonIcon
 } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { RouterModule } from '@angular/router';
-import { TriviaTestComponent } from "../pages/trivia-test/trivia-test.component";
+import { TriviaTestComponent } from "../trivia-test/trivia-test.component";
 
 @Component({
   selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss'],
+  templateUrl: 'trivia-test.page.html',
+  styleUrls: ['trivia-test.page.scss'],
   standalone: true,
   imports: [
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    IonButton, // ✅ add this
     RouterModule, // ✅ allows [routerLink]
-    ExploreContainerComponent,
-    TriviaTestComponent
+    TriviaTestComponent,
+    IonFab,
+    IonFabButton,
+    IonIcon
   ],
 })
-export class Tab1Page {
+export class TriviaTestPage {
   constructor() {}
 }

@@ -10,26 +10,44 @@ import {
   IonNote,
   IonCheckbox,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonFab,
+  IonFabButton
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TaskService } from '../services/task.service';
-import { TaskModel } from '../data/task.model'
+import { TaskService } from '../../services/task.service';
+import { TaskModel } from '../../data/task.model'
 import { addIcons } from 'ionicons';
 import { ellipse, flagOutline } from 'ionicons/icons';
 
 type PriorityColor = 'danger' | 'warning' | 'success' | null;
 
 @Component({
-  selector: 'app-tab5',
-  templateUrl: 'tab5.page.html',
-  styleUrls: ['tab5.page.scss'],
-  imports: [CommonModule, RouterModule, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonNote, IonCheckbox, IonButton, IonIcon],
+  selector: 'app-task-list',
+  templateUrl: 'task-list.page.html',
+  styleUrls: ['task-list.page.scss'],
+  imports: [
+    CommonModule,
+    RouterModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonNote,
+    IonCheckbox,
+    IonButton,
+    IonIcon,
+    IonFab,
+    IonFabButton
+  ],
 })
-export class Tab5Page {
+export class TaskListPage {
   tasks$: Observable<TaskModel[]>;
   todo$: Observable<TaskModel[]>;
   completed$: Observable<TaskModel[]>;
