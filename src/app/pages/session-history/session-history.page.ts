@@ -14,12 +14,21 @@ import {
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-// ✅ NEW imports for Ionicons
-import { addIcons } from 'ionicons';
-import { arrowBackOutline } from 'ionicons/icons';
+import { TaskService } from '../../services/task.service';
+import { TaskModel } from '../../data/task.model';
 
-// ✅ Register the back arrow icon
-addIcons({ arrowBackOutline });
+// Ionicons
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, timeOutline, flameOutline } from 'ionicons/icons';
+
+addIcons({ arrowBackOutline, timeOutline, flameOutline });
+
+interface SessionItem {
+  task: string;
+  date: Date;
+  pomodoros: number;
+  duration: number;
+}
 
 @Component({
   selector: 'app-session-history',
@@ -43,9 +52,30 @@ addIcons({ arrowBackOutline });
   ]
 })
 export class SessionHistoryPage {
-  sessions = [
-    { task: 'Math Homework', date: new Date('2025-10-29T14:00:00'), pomodoros: 3, duration: 75 },
-    { task: 'CS Project', date: new Date('2025-10-30T16:30:00'), pomodoros: 2, duration: 50 },
-    { task: 'Reading Notes', date: new Date('2025-10-31T12:00:00'), pomodoros: 1, duration: 25 }
-  ];
+  // what the template uses
+  sessions: SessionItem[] = [];
+
+  constructor(private taskService: TaskService) {
+    // Subscribe to the same task stream Tab 5 uses
+    this.taskService.tasks$.subscribe((tasks: TaskModel[]) => {
+      this.sessions = tasks.map((t) => {
+        // date: prefer due date, fall back to createdAt, fall back to "now"
+        const dateSource: any = t.due ?? t.createdAt ?? new Date().toISOString();
+        const date = new Date(dateSource);
+
+        // duration in minutes (default 25 if missing)
+        const duration = t.duration ?? 25;
+
+        // rough pomodoro count (25-minute blocks, at least 1)
+        const pomodoros = Math.max(1, Math.round(duration / 25));
+
+        return {
+          task: t.name,
+          date,
+          pomodoros,
+          duration
+        };
+      });
+    });
+  }
 }
