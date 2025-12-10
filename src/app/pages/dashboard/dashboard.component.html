@@ -6,6 +6,23 @@
     </div>
 
     <button (click)="logout()">Logout</button>
+
+    <div class="actions">
+        <ion-button routerLink="/task-list" color="primary">
+            Task List
+        </ion-button>
+        <ion-button routerLink="/pomodoro" color="primary">
+            Pomodoro
+        </ion-button>
+        <ion-button routerLink="/calendar" color="primary">
+            Calendar
+        </ion-button>
+        <ion-button routerLink="/session-history" color="primary">
+            Session History
+        </ion-button>
+    </div>
+
+
 </div>
 
 <ng-template #loading>

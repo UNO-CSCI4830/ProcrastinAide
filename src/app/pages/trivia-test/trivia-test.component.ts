@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TriviaService } from '../services/trivia.service';
+import { TriviaService } from '../../services/trivia.service';
 import { IonContent, IonButton } from "@ionic/angular/standalone";
 
 @Component({

@@ -62,4 +62,11 @@
   <div class="debug">
     <pre>{{ task | json }}</pre>
   </div>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="medium" (click)="goBack()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

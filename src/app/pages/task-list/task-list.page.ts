@@ -10,7 +10,9 @@ import {
   IonNote,
   IonCheckbox,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonFab,
+  IonFabButton
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -27,7 +29,23 @@ type PriorityColor = 'danger' | 'warning' | 'success' | null;
   selector: 'app-task-list',
   templateUrl: 'task-list.page.html',
   styleUrls: ['task-list.page.scss'],
-  imports: [CommonModule, RouterModule, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonNote, IonCheckbox, IonButton, IonIcon],
+  imports: [
+    CommonModule,
+    RouterModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonNote,
+    IonCheckbox,
+    IonButton,
+    IonIcon,
+    IonFab,
+    IonFabButton
+  ],
 })
 export class TaskListPage {
   tasks$: Observable<TaskModel[]>;

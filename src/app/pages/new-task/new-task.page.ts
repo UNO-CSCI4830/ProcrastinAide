@@ -12,6 +12,9 @@ import {
   IonSelect,
   IonSelectOption,
   IonButton,
+  IonFab,
+  IonFabButton,
+  IonIcon
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, JsonPipe } from '@angular/common';
@@ -38,6 +41,9 @@ import { Router } from '@angular/router';
     IonSelectOption,
     IonButton,
     FormsModule,
+    IonFab,
+    IonFabButton,
+    IonIcon
   ],
 })
 
@@ -94,4 +100,9 @@ export class NewTaskPage {
     this.router.navigate(['/task-list'])
 
   }
+
+  goBack() {
+    this.router.navigate(['/task-list']);
+  }
+
 }
