@@ -2,8 +2,15 @@
 <div class="dashboard-container">
     <h2>Welcome, {{ user()?.email }}</h2>
 
-    <div class="card">
+    <!---<div class="card">
         <p>You’re successfully logged in! 🎉</p>
+    </div>--->
+
+    <h2 class="center">Task Completion Chart</h2>
+
+    <div class="chart-container">
+        <canvas #pieCanvas></canvas>
+        
     </div>
 
     <button (click)="logout()">Logout</button>
