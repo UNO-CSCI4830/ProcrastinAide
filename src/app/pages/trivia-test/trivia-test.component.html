@@ -1,5 +1,10 @@
 <ion-content class="ion-padding">
 
+  <!-- BREAK TIMER DISPLAY -->
+  <h2 style="text-align:center; margin-bottom:20px;">
+    Time Left: {{ breakMinutes }}:{{ breakSeconds }}
+  </h2>
+
   <ion-card>
     <ion-card-header>
       <ion-card-title>{{ currentQuestion?.question }}</ion-card-title>
@@ -7,19 +12,18 @@
 
     <ion-card-content>
       <ion-list>
-        <ion-item 
-          *ngFor="let opt of currentQuestion?.options" 
+        <ion-item
+          *ngFor="let opt of currentQuestion?.options"
           (click)="selectOption(opt)"
           button
           detail="false">
-
           {{ opt }}
         </ion-item>
       </ion-list>
     </ion-card-content>
   </ion-card>
 
-  <!-- Feedback Section -->
+  <!-- FEEDBACK -->
   <div *ngIf="showFeedback" style="text-align:center; margin-top: 10px;">
     <h2>{{ feedback }}</h2>
   </div>
