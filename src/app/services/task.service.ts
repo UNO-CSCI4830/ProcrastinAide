@@ -6,15 +6,8 @@ import {
   collectionData,
   deleteDoc,
   doc,
-  query,
-  updateDoc,
-  where,
-  getDocs,
-  provideFirestore,
-  getFirestore,
-  connectFirestoreEmulator
+  updateDoc
 } from '@angular/fire/firestore';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TaskModel } from '../data/task.model';
 import { environment } from 'src/environments/environment';
@@ -30,7 +23,7 @@ export class TaskService {
   private tasksSub = new BehaviorSubject<TaskModel[]>([]);
 
   constructor(private firebaseService: FirebaseService) {
-    this.db = this.firebaseService.getDbInstance();
+    this.db = this.firebaseService.firestore;
     this.tasksCollection = collection(this.db, 'tasks');
   }
 
