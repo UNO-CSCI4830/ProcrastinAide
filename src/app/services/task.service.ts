@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+// task.service.ts
+import { Injectable } from '@angular/core';
 import {
   Firestore,
   addDoc,
@@ -6,25 +7,19 @@ import {
   collectionData,
   deleteDoc,
   doc,
-  updateDoc
+  updateDoc,
+  getDocs
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { TaskModel } from '../data/task.model';
-import { environment } from 'src/environments/environment';
-import { FirebaseService } from './firebase.service';
 
-// Define TaskService singleton to handle task management
 @Injectable({ providedIn: 'root' })
 export class TaskService {
-  private db: Firestore;
   private tasksCollection;
 
-  // (still here if you ever want local BehaviorSubject again)
-  private tasksSub = new BehaviorSubject<TaskModel[]>([]);
-
-  constructor(private firebaseService: FirebaseService) {
-    this.db = this.firebaseService.firestore;
-    this.tasksCollection = collection(this.db, 'tasks');
+  constructor(private firestore: Firestore) {
+    this.tasksCollection = collection(this.firestore, 'tasks');
+    console.log('Firestore settings:', (this.firestore as any)._settings);
   }
 
   /** Live stream of tasks from Firestore, with doc id mapped to `id` */
@@ -32,45 +27,37 @@ export class TaskService {
     return collectionData(this.tasksCollection, { idField: 'id' }) as Observable<TaskModel[]>;
   }
 
-  /** CREATE a new task in Firestore */
+  /** CREATE a new task */
   addTask(task: Omit<TaskModel, 'id' | 'createdAt'>) {
-    // configure the task to add
     const newTask: TaskModel = {
       ...task,
       createdAt: new Date().toISOString(),
       completed: false,
-      completedAt: null,
+      completedAt: null
     };
-
-    // write to Firestore
     return addDoc(this.tasksCollection, newTask);
   }
 
-  /** UPDATE an existing task (used for the Edit Task screen) */
+  /** UPDATE an existing task */
   updateTask(id: string, updates: Partial<Omit<TaskModel, 'id' | 'createdAt'>>) {
-    const taskRef = doc(this.db, `tasks/${id}`);
-    return updateDoc(taskRef, updates);
+    return updateDoc(doc(this.firestore, `tasks/${id}`), updates);
   }
 
-  /** Mark a task as completed / not completed, by its Firestore id */
+  /** MARK completed/not completed */
   setCompleted(id: string, completed = true) {
-    const taskRef = doc(this.db, `tasks/${id}`);
+    const taskRef = doc(this.firestore, `tasks/${id}`);
     const updates: any = { completed };
     if (completed) updates.completedAt = new Date().toISOString();
     else updates.completedAt = null;
     return updateDoc(taskRef, updates);
   }
 
-  /** Delete a specific task by id */
+  /** DELETE a task */
   clear(id: string) {
-    const taskRef = doc(this.db, `tasks/${id}`);
-    return deleteDoc(taskRef);
+    return deleteDoc(doc(this.firestore, `tasks/${id}`));
   }
 
-  // Algo for recommend next task
-  // Recommend the next task to work on based on priority and due date.
-  // Higher numeric 'priority' wins, nearer due dates boost the score.
-   
+  /** Recommend next task based on priority/due date */
   async recommendNextTask(): Promise<TaskModel | null> {
     const snap = await getDocs(this.tasksCollection);
     const tasks: TaskModel[] = snap.docs.map(d => ({ ...(d.data() as any), id: d.id } as TaskModel));
@@ -85,8 +72,7 @@ export class TaskService {
       if (t.due) {
         const dueMs = new Date(t.due).getTime();
         const days = (dueMs - now) / (1000 * 60 * 60 * 24);
-        if (days <= 0) dueScore = 2000; // overdue or due today
-        else dueScore = 1000 / (days + 1);
+        dueScore = days <= 0 ? 2000 : 1000 / (days + 1);
       }
       return p * 500 + dueScore;
     };

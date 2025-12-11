@@ -133,14 +133,14 @@ export class NewTaskPage {
       // EDIT existing task
       this.taskService.updateTask(this.taskId, payload as any);
       // immediately go back to Your Tasks
-      this.router.navigate(['/task-list']);
+      this.goBack();
     } else {
       // CREATE new task
       this.taskService.addTask(payload as any);
       // reset local form (not super necessary since we're leaving)
       this.task = { name: '', due: null, duration: null, category: null, priority: null };
       // go back to Your Tasks
-      this.router.navigate(['/task-list']);
+      this.goBack();
     }
   }
 
