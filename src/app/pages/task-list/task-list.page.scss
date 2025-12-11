@@ -9,3 +9,11 @@
 	color: var(--ion-color-medium);
 }
 
+.recommended {
+	border: 2px solid var(--ion-color-primary);
+	border-radius: 6px;
+	background: rgba(0, 123, 255, 0.06);
+	transition: background 0.2s ease-in-out, box-shadow 0.2s;
+	box-shadow: 0 0 0 3px rgba(0,0,0,0.02) inset;
+}
+

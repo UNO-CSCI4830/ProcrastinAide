@@ -69,4 +69,41 @@ export class TaskService {
     const taskRef = doc(this.db, `tasks/${id}`);
     return deleteDoc(taskRef);
   }
+
+  // Algo for recommend next task
+  // Recommend the next task to work on based on priority and due date.
+  // Higher numeric 'priority' wins, nearer due dates boost the score.
+   
+  async recommendNextTask(): Promise<TaskModel | null> {
+    const snap = await getDocs(this.tasksCollection);
+    const tasks: TaskModel[] = snap.docs.map(d => ({ ...(d.data() as any), id: d.id } as TaskModel));
+    const candidates = tasks.filter(t => !t.completed);
+    if (candidates.length === 0) return null;
+
+    const now = Date.now();
+
+    const score = (t: TaskModel) => {
+      const p = t.priority ?? 0;
+      let dueScore = 0;
+      if (t.due) {
+        const dueMs = new Date(t.due).getTime();
+        const days = (dueMs - now) / (1000 * 60 * 60 * 24);
+        if (days <= 0) dueScore = 2000; // overdue or due today
+        else dueScore = 1000 / (days + 1);
+      }
+      return p * 500 + dueScore;
+    };
+
+    let best: TaskModel | null = null;
+    let bestScore = -Infinity;
+    for (const t of candidates) {
+      const s = score(t);
+      if (s > bestScore) {
+        bestScore = s;
+        best = t;
+      }
+    }
+
+    return best;
+  }
 }
