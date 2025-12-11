@@ -58,11 +58,13 @@ export class NewTaskPage {
     due?: string | null;
     duration?: number | null;
     category?: string | null;
+    priority?: number | null;
   } = {
     name: '',
     due: null,
     duration: null,
     category: null,
+    priority: null,
   };
 
   categories = [
@@ -105,6 +107,7 @@ export class NewTaskPage {
             due: existing.due ?? null,
             duration: existing.duration ?? null,
             category: existing.category ?? null,
+            priority: existing.priority ?? null,
           };
         });
     });
@@ -122,6 +125,7 @@ export class NewTaskPage {
       due: this.task.due || null,
       duration: this.task.duration || null,
       category: this.task.category || null,
+      priority: this.task.priority || null,
       owner: '' // TODO: wire user later
     };
 
@@ -134,7 +138,7 @@ export class NewTaskPage {
       // CREATE new task
       this.taskService.addTask(payload as any);
       // reset local form (not super necessary since we're leaving)
-      this.task = { name: '', due: null, duration: null, category: null };
+      this.task = { name: '', due: null, duration: null, category: null, priority: null };
       // go back to Your Tasks
       this.router.navigate(['/task-list']);
     }
