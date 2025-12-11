@@ -46,6 +46,7 @@ export class TaskService {
       ...task,
       createdAt: new Date().toISOString(),
       completed: false,
+      completedAt: null,
     };
 
     // write to Firestore
@@ -61,7 +62,10 @@ export class TaskService {
   /** Mark a task as completed / not completed, by its Firestore id */
   setCompleted(id: string, completed = true) {
     const taskRef = doc(this.db, `tasks/${id}`);
-    return updateDoc(taskRef, { completed });
+    const updates: any = { completed };
+    if (completed) updates.completedAt = new Date().toISOString();
+    else updates.completedAt = null;
+    return updateDoc(taskRef, updates);
   }
 
   /** Delete a specific task by id */

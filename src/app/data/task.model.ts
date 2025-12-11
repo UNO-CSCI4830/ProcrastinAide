@@ -8,5 +8,6 @@ export interface TaskModel {
     category?: string | null;
     createdAt: string; // timestamp of when created
     completed?: boolean;
+    completedAt?: string | null;
     owner: string;
 }
