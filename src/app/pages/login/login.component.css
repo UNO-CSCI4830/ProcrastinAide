@@ -1,10 +1,26 @@
+/* Default light theme variables */
+:root {
+  --bg-color: #ffffff; /* White background */
+  --text-color: #000000; /* Black text */
+  --login-box-color: #bbbbbb; /* Light Grey */
+}
+
+/* Dark theme overrides when the user prefers a dark scheme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #000000; /* Black background */
+    --text-color: #ffffff; /* White text */
+    --login-box-color: #555555; /* Dark Grey */
+  }
+}
+
 .auth-container {
     width: 100%;
     max-width: 400px;
     margin: 80px auto;
     padding: 20px;
     border-radius: 16px;
-    background-color: #ffffff;
+    background-color: var(--login-box-color);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-family: Arial, sans-serif;
@@ -37,6 +53,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    background-color: var(--login-box-color)
 }
 
 input {

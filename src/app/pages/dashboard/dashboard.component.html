@@ -13,17 +13,12 @@
         
     </div>
 
-    <button (click)="logout()">Logout</button>
-
     <div class="actions">
         <ion-button routerLink="/task-list" color="primary">
             Task List
         </ion-button>
         <ion-button routerLink="/pomodoro" color="primary">
-            Pomodoro
-        </ion-button>
-        <ion-button routerLink="/calendar" color="primary">
-            Calendar
+            Study Session
         </ion-button>
         <ion-button routerLink="/session-history" color="primary">
             Session History
@@ -31,6 +26,9 @@
         <ion-button color="primary" (click)="recommendNextTask()">
             Recommend Next Task
         </ion-button>
+    </div>
+
+    <div>
         <!-- Dev-only: force show weekly recap -->
         <ion-button color="warning" (click)="showWeeklyRecapNow()">
             Show recap now
@@ -38,6 +36,9 @@
         </ion-button>
     </div>
 
+    <div>
+        <button (click)="logout()">Logout</button>
+    </div>
 
 </div>
 
